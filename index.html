@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>(:</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #56ccf2, #2f80ed);
+            font-family: 'Helvetica', sans-serif;
+            text-align: center;
+            color: white;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Weiße Balken auf beiden Seiten */
+        .side-bar {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 20vw; /* Dickere Balken */
+            background-color: white;
+        }
+
+        .left-bar {
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .right-bar {
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Animation für das Bild innerhalb der Balken */
+        .side-image {
+            width: 60%;
+            height: auto;
+            opacity: 0.8;
+            animation: stretch 3s ease-in-out infinite;
+        }
+
+        @keyframes stretch {
+            0% { transform: scale(1, 1); }
+            25% { transform: scale(1.1, 0.9); }
+            50% { transform: scale(1.2, 0.8); }
+            75% { transform: scale(0.9, 1.1); }
+            100% { transform: scale(1, 1); }
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 700;
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .birthday-text {
+            font-size: 36px;
+            font-weight: bold;
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+
+        .balloon {
+            position: absolute;
+            width: 50px;
+            height: 70px;
+            background: #ff7f50;
+            border-radius: 50%;
+            box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+            animation: floatUp 4s infinite ease-in-out; /* Schnellere Animation */
+        }
+
+        .balloon::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 50px;
+            background: #fff;
+            left: 50%;
+            bottom: -50px;
+            transform: translateX(-50%);
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) translateX(0) scale(1); opacity: 1; }
+            50% { transform: translateY(50vh) translateX(30px) scale(1.1); opacity: 0.8; }
+            100% { transform: translateY(-10vh) translateX(0) scale(1.2); opacity: 0; }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ffeb3b;
+            opacity: 0.8;
+            animation: fall 6s linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(0vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        .start-container, .gift-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            gap: 20px;
+        }
+
+        .start-button {
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            padding: 20px 50px;
+            font-size: 24px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+            transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+            box-shadow: 0 8px 20px rgba(255, 75, 43, 0.4);
+        }
+
+        .start-button:hover {
+            background: linear-gradient(45deg, #ff6a89, #ff8264);
+            transform: scale(1.15);
+            box-shadow: 0 10px 25px rgba(255, 75, 43, 0.6);
+        }
+
+        .gift-box {
+            width: 150px;
+            height: 150px;
+            background: <img class="gift-box" src="images/Gift.png" alt="Geschenk" onclick="increaseProgress()">
+ no-repeat center;
+            background-size: contain;
+            cursor: pointer;
+            transition: transform 0.5s ease-in-out;
+            animation: floaty 3s infinite alternate ease-in-out;
+        }
+
+        .progress-bar {
+            width: 250px;
+            height: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #ff416c, #ff4b2b);
+            transition: width 0.3s ease-in-out;
+        }
+
+        @keyframes floaty {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(10px); }
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: none;
+            text-align: center;
+            animation: zoomIn 0.5s forwards;
+        }
+
+        @keyframes zoomIn {
+            from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .modal img {
+            width: 320px;
+            height: auto;
+            border-radius: 10px;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Weiße Balken links und rechts -->
+    <div class="side-bar left-bar">
+        <img class="side-image" src="images/Mooshroom_19w39a.png" alt="Bild links">
+    </div>
+    <div class="side-bar right-bar">
+        <img class="side-image" src="images/160px-Braune_Mooshroom.png" alt="Bild rechts">
+    </div>
+
+    <div class="start-container" id="startScreen">
+        <h1 class="birthday-text">Alles Gute zum Geburtstag (: </h1>
+        <button class="start-button" onclick="startCelebration()"> -----> </button>
+    </div>
+
+    <div class="gift-container" id="giftScreen" style="display: none;">
+        <h1>Ist nicht das kreativste Geschenk,<br> aber ich hoffe du freust dich trzd :D</h1>
+
+        <p>Musst hier paarmal drauf klicken :D</p>
+        <div class="gift-box" onclick="increaseProgress()"></div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <div id="modal" class="modal">
+        <img id="modalImage" src="images/twitch_sub.png" alt="Geschenkbild">
+    </div>
+
+    <script>
+        let progress = 0;
+        const maxProgress = 100;
+
+        function startCelebration() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('giftScreen').style.display = 'flex';
+            createBalloons();
+            createConfetti();
+        }
+
+        function createBalloons() {
+            for (let i = 0; i < 10; i++) {
+                let balloon = document.createElement("div");
+                balloon.className = "balloon";
+                balloon.style.left = Math.random() * 100 + "vw";  // Position der Ballons über den gesamten Bildschirm
+                balloon.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 60%)`;
+                balloon.style.animationDuration = Math.random() * 6 + 6 + "s";  // Langsame Animation
+                document.body.appendChild(balloon);
+            }
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 200; i++) {
+                let confetti = document.createElement("div");
+                confetti.className = "confetti";
+                confetti.style.left = Math.random() * 100 + "vw";  // Startposition des Konfetti über den gesamten Bildschirm
+                confetti.style.top = Math.random() * 1 + "vh";   // Zufällige Startposition für das Konfetti
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                confetti.style.animationDuration = Math.random() * 3 + 2 + "s";
+                document.body.appendChild(confetti);
+            }
+        }
+
+        function increaseProgress() {
+            if (progress < maxProgress) {
+                progress += 2;  // Es müssen mehrere Klicks erfolgen
+                document.getElementById('progressFill').style.width = progress + "%";
+            }
+            
+            if (progress >= maxProgress) {
+                setTimeout(() => {
+                    document.getElementById('modal').style.display = 'block';
+                }, 500);
+            }
+        }
+    </script>
+</body>
+</html>
